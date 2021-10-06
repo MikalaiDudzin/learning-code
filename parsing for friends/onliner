@@ -22,9 +22,17 @@ with open(f'baraholka.onliner_{cur_data}.csv', 'w') as file:
             'ссылка'
         )
     )
+url = f'https://baraholka.onliner.by/search.php?q=%D1%81%D0%BC%D0%B0%D1%80%D1%82+%D1%87%D0%B0%D1%81%D1%8B&start=0'
+# print(url)
+r = requests.get(url=url, headers=headers)
+soup = BeautifulSoup(r.text, 'lxml')
+pages = soup.find_all(class_='pages-fastnav')[-1].text
+pages = int(pages[-1]) * 25
+# print(str)
+# pages = (0, pages, 25)
+# print(pages)
 
-
-for i in range(0, 150, 25):
+for i in range(0, pages , 25):
     url = f'https://baraholka.onliner.by/search.php?q=%D1%81%D0%BC%D0%B0%D1%80%D1%82+%D1%87%D0%B0%D1%81%D1%8B&start={i}'
     # print(url)
     r = requests.get(url=url, headers=headers)
