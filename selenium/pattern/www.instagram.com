@@ -13,7 +13,9 @@ useragent = UserAgent()
 # options
 options = webdriver.ChromeOptions()
 options.add_argument(f'user-agent={useragent.opera}')
-
+# headless mode
+# options.add_argument("--headless")
+# options.headless = True
 
 driver = webdriver.Chrome(executable_path='D:\проекты\pythonProject\chromedriver.exe', options=options)
 
