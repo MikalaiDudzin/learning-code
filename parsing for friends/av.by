@@ -1,0 +1,183 @@
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import datetime
+from time import sleep
+import random
+from fake_useragent import UserAgent
+from bs4 import BeautifulSoup
+import requests
+import lxml
+import csv
+import html
+
+print(' paste the url, and press enter -  ')
+url = input('')
+# url = 'https://cars.av.by/filter?brands[0][brand]=8&year[min]=1980&year[max]=2005&transmission_type=1'
+
+cur_data = datetime.datetime.now().strftime("%d_%m_%Y_%H_%M")
+start_time = datetime.datetime.now()
+
+
+
+
+with open(f'av_{cur_data}.csv', 'w', encoding='utf-8') as file:
+    writer = csv.writer(file)
+
+    writer.writerow(
+        (
+            "Модель",
+            "Год",
+            "Характеристики",
+            "Город",
+            "Пробег",
+            "Цена в руб.",
+            "Цена в USD",
+            "Ссылка",
+        )
+    )
+
+cars_datas = []
+
+useragent = UserAgent()
+#
+options = webdriver.ChromeOptions()
+# options.add_argument(f'user-agent={useragent.chrome}')
+
+options.add_argument("user-agent=Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0")
+
+options.add_argument("--disable-blink-features=AutomationControlled")
+
+options.headless = True
+
+driver = webdriver.Chrome(executable_path='D:\проекты\pythonProject\chromedriver.exe', options=options)
+
+try:
+    driver.get(url=url)
+    driver.implicitly_wait(10)
+
+    sorting = driver.find_element_by_xpath('//*[@id="__next"]/div[2]/main/div/div/div[1]/div[4]/div[3]/div/div[1]/div/div/div/div/button/span').click()
+    buttom_new = driver.find_element_by_xpath('//*[@id="__next"]/div[2]/main/div/div/div[1]/div[4]/div[3]/div/div[1]/div/div/div/div/ul/li[4]/button').click()
+    sleep(3)
+    new_url = driver.current_url
+
+
+    user = UserAgent().random
+    headers = {'user-agent': user}
+    r = requests.get(url=new_url, headers=headers)
+    soup = BeautifulSoup(r.text, 'lxml')
+    cars = soup.find('div', class_='listing__items').find_all('div', class_='listing-item')
+
+    for car in cars:
+        car_date = car.find(class_='listing-item__date').text
+
+        if car_date != 'вчера':
+            next_page = driver.find_element_by_xpath('//*[@id="__next"]/div[2]/main/div/div/div[1]/div[4]/div[3]/div/div[4]/div/div[1]').click()
+            driver.implicitly_wait(10)
+
+        elif car_date == 'вчера':
+            break
+    with open("index.html", "w", encoding='utf-8') as file:
+        file.write(driver.page_source)
+
+    with open("index.html", encoding='utf-8') as file:
+        src = file.read()
+
+    soup = BeautifulSoup(src, 'lxml')
+    cars = soup.find('div', class_='listing__items').find_all('div', class_='listing-item')
+
+    car_number = 1
+
+    for car in cars:
+        car_date = car.find(class_='listing-item__date').text
+
+
+        if car_date == 'вчера':
+            break
+
+        else:
+
+            try:
+                car_model = car.find('span', class_='link-text').text.replace(",", " ")
+
+            except:
+                car_model = '-------'
+
+            try:
+                car_year = car.find(class_='listing-item__params').find_next().text[0:4]
+            except:
+                car_year = '-------'
+
+            try:
+                car_data = car.find(class_='listing-item__params').find_next().find_next().text
+            except:
+
+                car_data = '-------'
+            try:
+                car_сity = car.find(class_='listing-item__location').text
+            except:
+                car_сity = '-------'
+
+            try:
+                car_milage = car.find(class_='listing-item__params').find_next().find_next().find_next().text
+            except:
+                car_milage = '-------'
+
+            try:
+                car_price = car.find(class_='listing-item__price').text
+            except:
+                car_price = '-------'
+
+            try:
+                car_price_usd = car.find(class_='listing-item__priceusd').text
+            except:
+                car_price_usd = '-------'
+
+            try:
+                car_url = 'https://cars.av.by' + (car.find(class_='listing-item__link').get('href'))
+            except:
+                car_url = '-------'
+
+            car_date = car.find(class_='listing-item__date').text
+
+            car_number += 1
+
+            cars_datas.append(
+                {
+                    'car_model': car_model,
+                    'car_year': car_year,
+                    'car_data': car_data,
+                    'car_сity': car_сity,
+                    'car_milage': car_milage,
+                    'car_price': car_price,
+                    'car_price_usd': car_price_usd,
+                    'car_url': car_url,
+                }
+            )
+
+            with open(f'av_{cur_data}.csv', 'a', encoding='utf-8') as file:
+                writer = csv.writer(file)
+
+                writer.writerow(
+                    (
+                        car_model,
+                        car_year,
+                        car_data,
+                        car_сity,
+                        car_milage,
+                        car_price,
+                        car_price_usd,
+                        car_url
+                    )
+                )
+
+    cur_time = datetime.datetime.now().strftime("%d_%m_%Y_%H_%M")
+    print(f'the collection has been completed \nthe number of cars {car_number} \ntime spent {cur_time}')
+
+
+except Exception as ex:
+    print(ex)
+
+finally:
+    driver.close()
+    driver.quit()
+
