@@ -1,11 +1,11 @@
-from flask_restful import Resource
+from flask_restful import Resource, Api
 
 from src import api
 
 
-class Smoke(Resource):
+class HelloWorld(Resource):
     def get(self):
-        return {'message': 'ok'}, 200
+        return {'hello': 'world'}
 
 
-api.add_resource(Smoke, '/smoke', strict_slashes=False)
+api.add_resource(HelloWorld, '/')
