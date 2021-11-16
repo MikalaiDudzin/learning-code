@@ -1,5 +1,5 @@
 from flask import request
-from flask_restful import Resource, Api
+from flask_restful import Resource
 
 from src import api
 
@@ -71,5 +71,5 @@ class FilmListApi(Resource):
         pass
 
 
-api.add_resource(Smoke, '/',strict_slasehs=False)
-api.add_resource(FilmListApi, '/films', '/films/<uuid>', strict_slasehs=False)
+api.add_resource(Smoke, '/', strict_slashes=False)
+api.add_resource(FilmListApi, '/films', '/films/<uuid>',strict_slashes=False)
