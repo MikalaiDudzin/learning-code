@@ -1,9 +1,7 @@
 """add film model
-
 Revision ID: 2fb3c547baa1
 Revises: 
 Create Date: 2021-11-16 22:19:15.576316
-
 """
 from alembic import op
 import sqlalchemy as sa

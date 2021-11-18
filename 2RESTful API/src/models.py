@@ -3,8 +3,6 @@ from src import db
 
 
 class Film(db.Model):
-    __tablename__ = 'films'
-
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     release_date = db.Column(db.Date, index=True, nullable=False)
