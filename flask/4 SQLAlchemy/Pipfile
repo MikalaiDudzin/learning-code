@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+flask-restful = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
+flask-swagger-ui = "*"
+marshmallow-sqlalchemy = "*"
+actor = "*"
+pysqlite3 = "*"
+resource = "*"
+film = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
