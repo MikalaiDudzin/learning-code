@@ -23,7 +23,7 @@ ul.mainmenu{
     height: 60px;
     margin: 0;
     padding: 0;
-    color: #FDC073;
+    color: #13a118;
     font-size: 20px;
     overflow: hiding;
 }
@@ -34,11 +34,11 @@ ul.mainmenu li{
 ul.mainmenu li.last{float: right:}
 
 ul.mainmenu li a {
-    color: #FDC073;
+    color: #08fc30;
     text-decoration: none;
 }
 ul.mainmenu li a:hover{
-    color: #FDA83D;
+    color: #db07b8;
 }
 
 div.content{
