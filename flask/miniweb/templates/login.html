@@ -5,7 +5,7 @@
 {% for cat, mgs in get_flashed_messages(True) %}
 <div class="flash{{cat}}">{{mgs}}</div>
 {% endfor %}
-<form action="" method="post" class="from-contact">
+
 {{ form.hidden_tag() }}
 {% for field in form if field.name not in ['csrf_token', 'remember', 'submit'] -%}
     <p>{{ field.label() }}

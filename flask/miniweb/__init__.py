@@ -4,8 +4,9 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from UserLogin import UserLogin
-from forms import LoginForm
+from forms import LoginForm, RegisterForm
 from FDataBase import FDataBase
+from admin.admin import admin
 
 DATABASE = '/data/flsite.db'
 DEBUG = True
@@ -15,6 +16,7 @@ MAX_CONTENT_LENGTH = 1024 * 1024 * 3
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.update(dict(DATABASE=os.path.join(app.root_path, 'flsite.db')))
+app.register_blueprint(admin, url_prefix='/admin')
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -109,7 +111,7 @@ def login():
             rm = form.remember.data
             login_user(userlogin, remember=rm)
             return redirect(request.args.get('next') or url_for('profile'))
-        flash('Неверная пара логин/пароль', 'error')
+        flash('Неверная пара логин/пароль', category='error')
     return render_template('login.html', menu=dbase.getMenu(), title='Авторизация', form=form)
 
     # if request.method == 'POST':
@@ -134,19 +136,17 @@ def logout():
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
-    if request.method == 'POST':
-        if len(request.form['name']) > 4 and len(request.form['email']) > 4 \
-                and len(request.form['psw']) > 4 and request.form['psw'] == request.form['psw2']:
-            hash = generate_password_hash(request.form['psw'])
-            res = dbase.addUser(request.form['name'], request.form['email'], hash)
-            if res:
-                flash('Вы успешно зарегистрированы ', category='success')
-                return redirect(url_for('login'))
-            else:
-                flash('Ошибка при добавлении в БД', category='error')
+    form = RegisterForm()
+    if form.validate_on_submit():
+        hash = generate_password_hash(form.psw.data)
+        res = dbase.addUser(form.name.data, form.email.data, hash)
+        if res:
+            flash('Вы успешно зарегистрированы ', category='success')
+            return redirect(url_for('login'))
         else:
-            flash('Неверно заполнены поля ', category='error')
-    return render_template('register.html', menu=dbase.getMenu(), title='Регистрация')
+            flash('Ошибка при добавлении в БД', category='error')
+
+    return render_template('register.html', menu=dbase.getMenu(), title='Регистрация', form=form)
 
 
 @app.route('/profile')
