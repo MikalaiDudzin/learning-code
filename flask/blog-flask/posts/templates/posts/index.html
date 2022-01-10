@@ -8,14 +8,14 @@
 {% block content_title %}
     Posts
 {% endblock %}
-
+<br>
 {% block content %}
     {% for post in pages.items %}
         <p>
             <a href="{{ url_for('posts.post_detail', slug=post.slug) }}"> {{ post.title }} </a>
         </p>
     {% endfor %}
-
+<br>
 <nav aria-label="Page navigation example">
   <ul class="pagination">
     {% for page in pages.iter_pages() %}

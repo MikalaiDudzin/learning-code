@@ -1,20 +1,26 @@
 {% extends 'base.html' %}
 
-{% block title %}
 
-    Index page
+{% block index %}
 
-{% endblock %}
+<header class="masthead" style="background-image: url('static/img/home-bg.jpg')">
+  <div class="container position-relative px-4 px-lg-5">
+      <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-md-10 col-lg-8 col-xl-7">
+              <div class="site-heading">
+                  <h1>Flask </h1>
+                  <br>
+                  <span class="subheading">Фреймворк для создания веб-приложений на языке программирования Python, использующий набор инструментов Werkzeug, а также шаблонизатор Jinja2. Относится к категории так называемых микрофреймворков[en] — минималистичных каркасов веб-приложений, сознательно предоставляющих лишь самые базовые возможности.
 
+                                            <p>Поддерживается установка посредством пакетного менеджера PyPI, версия 1.0 совместима с Python 2.7, Python 3.3 и выше.
 
-{% block content_title %}
-
-    index page
-
-{% endblock %}
-
-{% block content %}
-
-    Some content
+                                            <p>Создатель и основной автор — австрийский программист Армин Ронахер, начал работу над проектом в 2010 году.
+                                            <p><a href="https://ru.wikipedia.org/wiki/Flask_(%D0%B2%D0%B5%D0%B1-%D1%84%D1%80%D0%B5%D0%B9%D0%BC%D0%B2%D0%BE%D1%80%D0%BA)">Материал из Википедии — свободной энциклопедии</a>
+                  </span>
+              </div>
+          </div>
+      </div>
+  </div>
+</header>
 
 {% endblock %}
